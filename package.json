@@ -1,0 +1,11 @@
+{
+    "name": "lambda-app",
+    "version": "1.0.0",
+    "description": "Lambda function that connects to DynamoDB",
+    "main": "index.mjs",
+    "type": "module",
+    "dependencies": {
+      "aws-sdk": "^2.1048.0"
+    }
+  }
+  

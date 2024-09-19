@@ -1,7 +1,7 @@
-version: 1.0
+version: 0.0  # Correct AppSpec version for Lambda
 Resources:
   - myLambdaFunction:
       Type: AWS::Lambda::Function
       Properties:
-        Name: "LambdaDynamoDBApp"  # Ensure correct Lambda function name
- 
+        Name: "LambdaDynamoDBApp" 
+        CurrentVersion: 1  # Specify the published version

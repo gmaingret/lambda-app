@@ -1,7 +1,7 @@
-version: 0.0  # Correct AppSpec version for Lambda
+version: 0.0
 Resources:
   - myLambdaFunction:
       Type: AWS::Lambda::Function
       Properties:
-        Name: "LambdaDynamoDBApp" 
-        CurrentVersion: 1  # Specify the published version
+        Name: "LambdaDynamoDBApp"  # Your Lambda function name
+        Alias: "prod"              # Replace with the alias you just created

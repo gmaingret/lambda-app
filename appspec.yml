@@ -1,8 +1,10 @@
 version: 0.0
-Resources:
+resources:
   - myLambdaFunction:
       Type: AWS::Lambda::Function
       Properties:
         Name: "LambdaDynamoDBApp"  # Your Lambda function name
-        Alias: "prod"              # Replace with the alias you created
-        CurrentVersion: 1          # Replace with the current published version number
+        Alias: "prod"              # The alias you created
+        CurrentVersion: 1          # The current published version number
+        TargetVersion: 2           # The new published version number
+ 

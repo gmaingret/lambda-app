@@ -1,13 +1,14 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const client = new DynamoDBClient({ region: "your-region" });
+const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
 const params = {
-  TableName: 'YourTableName',
+  TableName: 'UserProfiles',
   Key: {
-    'id': '123'
+            'UserId': '123', // Example user ID
+            'Name': 'John Doe'
   }
 };
 

@@ -6,7 +6,7 @@ export const handler = async (event) => {
     const params = {
         TableName: 'UserProfiles',
         Item: {
-            'UserId': '123', // Example user ID
+            'UserId': '1', // Example user ID
             'Name': 'John Doe'
         }
     };

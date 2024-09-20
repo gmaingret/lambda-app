@@ -5,5 +5,5 @@ Resources:
       Properties:
         Name: "LambdaDynamoDBApp"   # Replace with your actual Lambda function name
         Alias: "prod"               # Replace with your alias
-        CurrentVersion: 1           # Replace with your current version
-        TargetVersion: 3            # Replace with the new version you're deploying
+        CurrentVersion: 4           # Replace with your current version
+        TargetVersion: 5            # Replace with the new version you're deploying

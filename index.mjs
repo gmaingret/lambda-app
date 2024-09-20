@@ -1,22 +1,22 @@
+import { v4 as uuidv4 } from 'uuid'; // Installez ce module avec `npm install uuid`
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-// Créer un client DynamoDB
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-// Définir les paramètres de l'élément que vous voulez enregistrer
+const userId = uuidv4(); // Génère un identifiant unique
 const params = {
-  TableName: 'UserProfiles', // Nom de la table
+  TableName: 'UserProfiles',
   Item: {
-    'Name': 'John Doe', // Utilisez le nom comme clé primaire si c'est configuré comme tel
-    'Age': 30,          // Ajoutez d'autres attributs selon votre besoin
-    'Email': 'johndoe@example.com' // Un exemple d'attribut supplémentaire
+    'UserId': userId, // Utilise l'ID généré comme clé primaire
+    'Name': 'John Doe',
+    'Age': 30,
+    'Email': 'johndoe@example.com'
   }
 };
 
 try {
-  // Exécuter la commande Put pour enregistrer l'élément
   const data = await dynamoDb.send(new PutCommand(params));
   console.log("User saved successfully:", data);
 } catch (err) {

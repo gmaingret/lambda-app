@@ -3,7 +3,9 @@ Resources:
   - LambdaDeploymentResource:
       Type: AWS::Lambda::Function
       Properties:
-        Name: "LambdaDynamoDBApp"   # Replace with your actual Lambda function name
-        Alias: "prod"               # Replace with your alias
-        CurrentVersion: 1           # Replace with your current version
-        TargetVersion: 1            # Replace with the new version you're deploying
+        Name: "LambdaDynamoDBApp"   # Remplacez par le nom exact de votre fonction Lambda
+        Alias: "prod"               # Alias que vous souhaitez mettre à jour
+        CurrentVersion: "1"         # La version actuelle que l'alias pointe (facultatif)
+        TargetVersion: "1"          # La nouvelle version que vous déployez (généralement remplacée par AWS CodeDeploy)
+        # Vous pouvez laisser CurrentVersion et TargetVersion si vous utilisez CodeDeploy
+        # pour gérer les versions automatiquement

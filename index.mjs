@@ -1,27 +1,19 @@
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const client = new DynamoDBClient({ region: "your-region" });
+const dynamoDb = DynamoDBDocumentClient.from(client);
 
-export const handler = async (event) => {
-    const params = {
-        TableName: 'UserProfiles',
-        Item: {
-            'UserId': '1', // Example user ID
-            'Name': 'John Doe'
-        }
-    };
-
-    try {
-        await dynamoDb.put(params).promise();
-        return {
-            statusCode: 200,
-            body: JSON.stringify('User profile saved successfully!'),
-        };
-    } catch (error) {
-        return {
-            statusCode: 500,
-            body: `Error saving user profile: ${error.message}`,
-        };
-    }
+const params = {
+  TableName: 'YourTableName',
+  Key: {
+    'id': '123'
+  }
 };
- 
+
+try {
+  const data = await dynamoDb.send(new GetCommand(params));
+  console.log(data);
+} catch (err) {
+  console.error(err);
+}

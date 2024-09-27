@@ -1,3 +1,5 @@
+console.log("start logging");
+
 // index.mjs
 
 export const handler = async (event) => {

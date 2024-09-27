@@ -1,11 +1,23 @@
 // index.mjs
-import { createUser } from './api/user/createUser.js';
-import { getUser } from './api/user/getUser.js';
-import { updateUser } from './api/user/updateUser.js';
-import { deleteUser } from './api/user/deleteUser.js';
 
 export const handler = async (event) => {
   console.log('Handler invoked');
+
+  let createUser, getUser, updateUser, deleteUser;
+
+  try {
+    // Dynamic imports to catch initialization errors
+    ({ createUser } = await import('./api/user/createUser.js'));
+    ({ getUser } = await import('./api/user/getUser.js'));
+    ({ updateUser } = await import('./api/user/updateUser.js'));
+    ({ deleteUser } = await import('./api/user/deleteUser.js'));
+  } catch (error) {
+    console.error('Initialization error during imports:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Initialization error during imports' }),
+    };
+  }
 
   const { httpMethod, path } = event;
 

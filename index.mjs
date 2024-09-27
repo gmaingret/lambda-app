@@ -1,67 +1,32 @@
-import { v4 as uuidv4 } from 'uuid';
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-
-const client = new DynamoDBClient({ region: "eu-west-3" });
-const dynamoDb = DynamoDBDocumentClient.from(client);
+// index.mjs
+import { createUser } from './api/user/createUser.js';
+import { getUser } from './api/user/getUser.js';
+import { updateUser } from './api/user/updateUser.js';
+import { deleteUser } from './api/user/deleteUser.js';
 
 export const handler = async (event) => {
-  let body;
+  const { httpMethod, path } = event;
 
   try {
-    // Parser le corps de la requête
-    body = JSON.parse(event.body);
-  } catch (error) {
-    console.error("Invalid JSON in request body:", error);
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Invalid JSON in request body" }),
-    };
-  }
-
-  // Extraire les paramètres
-  const { Name, Age, Email } = body;
-
-  // Validation basique des données
-  if (!Name || !Age || !Email) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Name, Age, and Email are required" }),
-    };
-  }
-
-  // Conversion de l'âge en nombre
-  const ageNumber = Number(Age);
-  if (isNaN(ageNumber)) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Age must be a number" }),
-    };
-  }
-
-  const userId = uuidv4(); // Génère un identifiant unique
-  const params = {
-    TableName: 'UserProfiles',
-    Item: {
-      'UserId': userId,
-      'Name': Name,
-      'Age': ageNumber,
-      'Email': Email
+    if (httpMethod === 'POST' && path === '/user') {
+      return await createUser(event);
+    } else if (httpMethod === 'GET' && path.startsWith('/user/')) {
+      return await getUser(event);
+    } else if (httpMethod === 'PUT' && path.startsWith('/user/')) {
+      return await updateUser(event);
+    } else if (httpMethod === 'DELETE' && path.startsWith('/user/')) {
+      return await deleteUser(event);
+    } else {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: 'Not Found' }),
+      };
     }
-  };
-
-  try {
-    const data = await dynamoDb.send(new PutCommand(params));
-    console.log("User saved successfully:", data);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Utilisateur enregistré avec succès", userId }),
-    };
-  } catch (err) {
-    console.error("Error saving user:", err);
+  } catch (error) {
+    console.error('Error handling request:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Erreur lors de l'enregistrement de l'utilisateur" }),
+      body: JSON.stringify({ error: 'Internal Server Error' }),
     };
   }
 };

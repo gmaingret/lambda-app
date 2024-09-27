@@ -5,6 +5,8 @@ import { updateUser } from './api/user/updateUser.js';
 import { deleteUser } from './api/user/deleteUser.js';
 
 export const handler = async (event) => {
+  console.log('Handler invoked');
+
   const { httpMethod, path } = event;
 
   try {

@@ -6,7 +6,7 @@ import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
 const s3 = new S3Client({ region: "eu-west-3" });
-const bucketName = 'user-profile-pictures'; // Replace with your bucket name
+const bucketName = '100110721009-user-profile-pictures'; 
 
 export const deleteUser = async (event) => {
   const { userId } = event.pathParameters || {};

@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
-const s3 = new S3Client({ region: "eu-west-3" });
-const bucketName = 'user-profile-pictures'; // Replace with your bucket name
+const s3 = new S3Client({ region: "eu-west-3", endpoint: "https://s3.eu-west-3.amazonaws.com"});
+const bucketName = 'user-profile-pictures'; 
 
 export const createUser = async (event) => {
   const { Name, Age, Email, ProfilePicture } = JSON.parse(event.body) || {};

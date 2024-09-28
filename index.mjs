@@ -3,28 +3,22 @@ import { getUser } from './api/user/getUser.js';
 import { updateUser } from './api/user/updateUser.js';
 import { deleteUser } from './api/user/deleteUser.js';
 
+const routes = {
+  POST: { "/user": createUser },
+  GET: (path) => path.startsWith("/user/") && getUser,
+  PUT: (path) => path.startsWith("/user/") && updateUser,
+  DELETE: (path) => path.startsWith("/user/") && deleteUser
+};
+
 export const handler = async (event) => {
   console.log('Event received by Lambda:', JSON.stringify(event, null, 2));
+  const { method: httpMethod, path } = event.requestContext.http;
 
-  // Extract HTTP method and path from the correct location in the event object
-  const httpMethod = event.requestContext.http.method;
-  const path = event.requestContext.http.path;
+  const routeHandler = routes[httpMethod]?.[path] || routes[httpMethod]?.(path);
 
-  console.log(`HTTP Method: ${httpMethod}, Path: ${path}`);
-
-  // Routing logic
-  if (httpMethod === 'POST' && path === '/user') {
-    return await createUser(event);
-  } else if (httpMethod === 'GET' && path.startsWith('/user/')) {
-    return await getUser(event);
-  } else if (httpMethod === 'PUT' && path.startsWith('/user/')) {
-    return await updateUser(event);
-  } else if (httpMethod === 'DELETE' && path.startsWith('/user/')) {
-    return await deleteUser(event);
-  } else {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({ error: 'Not Found' }),
-    };
+  if (routeHandler) {
+    return routeHandler(event);
   }
+
+  return { statusCode: 404, body: JSON.stringify({ error: 'Not Found' }) };
 };

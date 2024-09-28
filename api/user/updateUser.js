@@ -1,13 +1,18 @@
 // updateUser.js
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
 
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
+const s3 = new S3Client({ region: "eu-west-3" });
+const bucketName = 'user-profile-pictures'; // Replace with your bucket name
+
 
 export const updateUser = async (event) => {
   const { userId } = event.pathParameters || {};
-  const { Name, Age, Email } = JSON.parse(event.body) || {};
+  const { Name, Age, Email, ProfilePicture } = JSON.parse(event.body) || {};
 
   if (!userId) {
     return { statusCode: 400, body: JSON.stringify({ error: "UserId is required" }) };
@@ -40,6 +45,12 @@ export const updateUser = async (event) => {
     expressionAttributeNames["#email"] = "Email";
     expressionAttributeValues[":email"] = Email;
   }
+  if (ProfilePicture) {
+    const pictureUrl = await uploadProfilePicture(userId, ProfilePicture);
+    updateExpressions.push("#profilePicture = :profilePicture");
+    expressionAttributeNames["#profilePicture"] = "ProfilePicture";
+    expressionAttributeValues[":profilePicture"] = pictureUrl;
+  }
 
   const params = {
     TableName: "UserProfiles",
@@ -52,4 +63,17 @@ export const updateUser = async (event) => {
 
   const data = await dynamoDb.send(new UpdateCommand(params));
   return { statusCode: 200, body: JSON.stringify({ message: "User updated successfully", user: data.Attributes }) };
+};
+
+const uploadProfilePicture = async (userId, base64Image) => {
+  const buffer = Buffer.from(base64Image, 'base64');
+  const uploadParams = {
+    Bucket: bucketName,
+    Key: `${userId}.jpg`,
+    Body: buffer,
+    ContentEncoding: 'base64',
+    ContentType: 'image/jpeg',
+  };
+  await s3.send(new PutObjectCommand(uploadParams));
+  return `https://${bucketName}.s3.amazonaws.com/${userId}.jpg`;
 };

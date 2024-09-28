@@ -14,7 +14,9 @@ export const handler = async (event) => {
   console.log('Event received by Lambda:', JSON.stringify(event, null, 2));
   console.log('Handler invoked');
 
-  const { httpMethod, path, pathParameters } = event;
+  const httpMethod = event.requestContext.http.method;
+  const path = event.requestContext.http.path;
+  
   console.log(`HTTP Method: ${httpMethod}, Path: ${path}`);
   try {
     if (httpMethod === 'POST' && path === '/user') {

@@ -6,8 +6,8 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
-const s3 = new S3Client({ region: "eu-west-3", endpoint: "https://s3.eu-west-3.amazonaws.com"});
-const bucketName = 'user-profile-pictures'; 
+const s3 = new S3Client({ region: "eu-west-3"});
+const bucketName = '100110721009-user-profile-pictures'; 
 
 
 export const updateUser = async (event) => {

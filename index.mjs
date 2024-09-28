@@ -10,18 +10,24 @@ const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
 export const handler = async (event) => {
+  console.log('Handler ------');
+  console.log('Event received by Lambda:', JSON.stringify(event, null, 2));
   console.log('Handler invoked');
 
   const { httpMethod, path, pathParameters } = event;
-
+  console.log(`HTTP Method: ${httpMethod}, Path: ${path}`);
   try {
     if (httpMethod === 'POST' && path === '/user') {
+      console.log('Creating user...');
       return await createUser(event);
     } else if (httpMethod === 'GET' && path.startsWith('/user/')) {
+      console.log('Getting user...');
       return await getUser(event);
     } else if (httpMethod === 'PUT' && path.startsWith('/user/')) {
+      console.log('Updating user...');
       return await updateUser(event);
     } else if (httpMethod === 'DELETE' && path.startsWith('/user/')) {
+      console.log('Deleting user...');
       return await deleteUser(event);
     } else {
       return {

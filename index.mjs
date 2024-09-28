@@ -1,3 +1,5 @@
+console.log("START LOGGING!")
+
 // Consolidated index.mjs
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
@@ -6,8 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 const client = new DynamoDBClient({ region: "eu-west-3" });
 const dynamoDb = DynamoDBDocumentClient.from(client);
-
-console.log("start logging");
 
 export const handler = async (event) => {
   console.log('Handler invoked');

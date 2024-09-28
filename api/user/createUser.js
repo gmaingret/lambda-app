@@ -16,11 +16,12 @@ export const createUser = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Name, Age, and Email are required' }) };
   }
 
+  const userId = uuidv4();
   const pictureUrl = ProfilePicture ? await uploadProfilePicture(userId, ProfilePicture) : null;
 
   const params = {
     TableName: 'UserProfiles',
-    Item: { UserId: uuidv4(), Name, Age: Number(Age), Email, ProfilePicture: pictureUrl },
+    Item: { UserId: userId, Name, Age: Number(Age), Email, ProfilePicture: pictureUrl },
   };
   
   await dynamoDb.send(new PutCommand(params));
